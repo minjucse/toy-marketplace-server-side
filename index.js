@@ -3,7 +3,7 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 5000;
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config()
 
 // middleware
@@ -105,6 +105,7 @@ async function run() {
     });
 
     app.delete('/product/:id', async (req, res) => {
+      console.log(req.params.id)
       const query = { _id: new ObjectId(req.params.id) }
       const result = await productsCollection.deleteOne(query);
       res.send(result);
