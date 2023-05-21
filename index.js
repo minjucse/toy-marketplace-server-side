@@ -56,11 +56,22 @@ async function run() {
         .toArray();
       res.send(results);
     });
+
     app.get("/detail-product/:id", async (req, res) => {
       const results = await productsCollection
       .findOne({
         _id: new ObjectId(req.params.id),
       });
+      res.send(results);
+    });
+
+    app.get("/productByCategory/:category", async (req, res) => {
+      
+      const results = await productsCollection
+        .find({
+          category: req.params.category,
+        })
+        .toArray();
       res.send(results);
     });
 
