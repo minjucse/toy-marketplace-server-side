@@ -39,7 +39,15 @@ async function run() {
       res.send(results);
     });
 
-    
+    app.get("/my-product/:email", async (req, res) => {
+      console.log(req.params.id);
+      const results = await productsCollection
+        .find({
+          createdBy: req.params.email,
+        })
+        .toArray();
+      res.send(results);
+    });
 
     app.post("/add-product", async (req, res) => {
       const body = req.body;
