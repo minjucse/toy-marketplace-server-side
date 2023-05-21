@@ -23,7 +23,7 @@ const client = new MongoClient(uri, {
 async function run() {
   try {
     // Connect the client to the server	(optional starting in v4.7)
-    await client.connect();
+     client.connect();
     // Send a ping to confirm a successful connection
     app.get('/', (req, res) => {
       res.send('Server Api is running')
@@ -35,6 +35,7 @@ async function run() {
       const results = await productsCollection
         .find({})
         .sort({ createdAt: -1 })
+        .limit(20)
         .toArray();
       res.send(results);
     });
@@ -66,12 +67,22 @@ async function run() {
     });
 
     app.get("/productByCategory/:category", async (req, res) => {
-      const results = await productsCollection
-        .find({
-          category: req.params.category,
-        })
+      if(req.params.category=="all"){
+        const results = await productsCollection
+        .find({})
+        .sort({ createdAt: -1 })
+        .limit(8)
         .toArray();
       res.send(results);
+      }
+      else{
+        const results = await productsCollection
+        .find({
+          category: req.params.category,
+        }).limit(8)
+        .toArray();
+      res.send(results);
+      }
     });
 
     app.post("/add-product", async (req, res) => {
@@ -105,7 +116,6 @@ async function run() {
     });
 
     app.delete('/product/:id', async (req, res) => {
-      console.log(req.params.id)
       const query = { _id: new ObjectId(req.params.id) }
       const result = await productsCollection.deleteOne(query);
       res.send(result);
