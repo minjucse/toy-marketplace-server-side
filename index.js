@@ -40,10 +40,18 @@ async function run() {
     });
 
     app.get("/my-product/:email", async (req, res) => {
-      console.log(req.params.id);
       const results = await productsCollection
         .find({
           createdBy: req.params.email,
+        })
+        .toArray();
+      res.send(results);
+    });
+
+    app.get("/searchProduct/:searchKeyword", async (req, res) => {
+      const results = await productsCollection
+        .find({
+          name: req.params.searchKeyword,
         })
         .toArray();
       res.send(results);
