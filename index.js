@@ -66,7 +66,6 @@ async function run() {
     });
 
     app.get("/productByCategory/:category", async (req, res) => {
-      
       const results = await productsCollection
         .find({
           category: req.params.category,
@@ -88,6 +87,28 @@ async function run() {
         });
       }
     });
+
+    app.put("/update-product/:id", async (req, res) => {
+      const id = req.params.id;
+      const body = req.body;
+      console.log(body);
+      const filter = { _id: new ObjectId(id) };
+      const updateDoc = {
+        $set: {
+          price: body.price,
+          quantity: body.quantity,
+          description: body.description,
+        },
+      };
+      const result = await productsCollection.updateOne(filter, updateDoc);
+      res.send(result);
+    });
+
+    app.delete('/product/:id', async (req, res) => {
+      const query = { _id: new ObjectId(req.params.id) }
+      const result = await productsCollection.deleteOne(query);
+      res.send(result);
+  })
 
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
   } finally {
